@@ -7,18 +7,13 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import comuiappcenter.facebook.m.legacy.InterestedClassSettingActivity;
-import comuiappcenter.facebook.m.legacy.userInfo;
+import comuiappcenter.facebook.m.legacy.User.userInfo;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import comuiappcenter.facebook.m.legacy.R;

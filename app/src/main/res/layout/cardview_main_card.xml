@@ -9,7 +9,7 @@
         card:cardCornerRadius="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card:cardElevation="3dp"
+        card:cardElevation="7dp"
         card:cardPreventCornerOverlap="false"
         android:layout_marginBottom="8dp">
 

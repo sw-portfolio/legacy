@@ -38,7 +38,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/answer_list_modify"
+        android:id="@+id/answer_list_choose"
         android:layout_alignBottom="@+id/title_answer_list"
         android:layout_toStartOf="@+id/answer_list_thumbs_up_button"
         android:src="@drawable/ic_menu_manage" />
@@ -49,6 +49,6 @@
         android:text="작성자"
         android:id="@+id/author_answer_list"
         android:layout_alignBottom="@+id/imageView2"
-        android:layout_toStartOf="@+id/answer_list_modify" />
+        />
 
 </RelativeLayout>

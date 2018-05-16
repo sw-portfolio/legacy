@@ -9,8 +9,6 @@ public class QuestionListActivity extends AppCompatActivity
 {
     String QuestionList;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -22,6 +20,11 @@ public class QuestionListActivity extends AppCompatActivity
 
     }
 
-
-
+    @Override
+    public void onBackPressed() // 백 키를 누르면 무조건 MainActivity로 인텐트
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        //super.onBackPressed();
+    }
 }

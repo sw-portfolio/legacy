@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:key="check"
-        android:title="진동여부"
-        android:defaultValue="false"
-        android:summary="체크하면 진동설정"
-        />
+
     <Preference
         android:key="notice"
         android:title="공지사항"
         android:summary="공지사항을 보려면 클릭하세요."
         android:targetClass="comuiappcenter.facebook.m.legacy.NoticeActivity"
         />
-    <EditTextPreference
-        android:key="edit"
-        android:title="음량선택"
-        android:defaultValue="20"
-        android:summary="음량을 선택하시오"
+    <Preference
+        android:key="feedback"
+        android:title="개발자에게 건의해요"
+        android:summary="황당한 버그를 발견하셨거나, 기발한 아이디어가 생각나셨다면 클릭해주세요."
+        />
+    <CheckBoxPreference
+        android:key="Push"
+        android:title="푸쉬 메시지 끄기"
+        android:summaryOff="다른 학우의 질문을 푸쉬로 받기 싫으시다면 설정합니다. 다만 10일 동안 긴급질문을 할 수 없습니다."
+        android:summaryOn="푸쉬 메시지를 받지 않습니다. 긴급 질문 불가"
         />
 
 </PreferenceScreen>

@@ -32,7 +32,7 @@
     </RelativeLayout>
 
 
-    <comuiappcenter.facebook.m.legacy.defaultButton
+    <comuiappcenter.facebook.m.legacy.customView.defaultButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_question_view"
@@ -46,13 +46,12 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
-        <comuiappcenter.facebook.m.legacy.defaultTextBox
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:minLines="1"
         android:id="@+id/title_question_view"
         android:paddingBottom="5dp">
-    </comuiappcenter.facebook.m.legacy.defaultTextBox>
+        </TextView>
 
         <ImageView
             android:layout_width="wrap_content"

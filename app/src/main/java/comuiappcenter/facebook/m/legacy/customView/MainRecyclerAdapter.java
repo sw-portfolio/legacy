@@ -61,7 +61,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         holder.mTextView.setText(mDataset.get(position).text);
     }
 
-
     @Override
     public int getItemCount()
     {

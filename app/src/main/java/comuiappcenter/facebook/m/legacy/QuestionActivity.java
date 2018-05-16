@@ -1,19 +1,25 @@
 package comuiappcenter.facebook.m.legacy;
 
 import android.content.Intent;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import comuiappcenter.facebook.m.legacy.User.userInfo;
+import comuiappcenter.facebook.m.legacy.customView.defaultTextBox;
+import comuiappcenter.facebook.m.legacy.dataContainer.INUClasses;
 import cz.msebera.android.httpclient.Header;
 
 /* 질문을 서버에 등록하는 액티비티입니다. 질문의 key 이름은 제목 -> QuestionTitle 본문 -> QuestionBody 입니다.
@@ -21,17 +27,18 @@ import cz.msebera.android.httpclient.Header;
 
 public class QuestionActivity extends AppCompatActivity
 {
-    View acceptButton;
+    ImageView acceptButton;
     Button CategoryButton;
     RestClient client;
     String Category = null;
+    public static boolean isEmergency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
-        acceptButton = (RelativeLayout) findViewById(R.id.accept_button);
+        acceptButton = (ImageView) findViewById(R.id.accept_button);
         acceptButton.setOnClickListener(new ButtonListener());
 
         //카테고리 버튼 설정
@@ -44,6 +51,11 @@ public class QuestionActivity extends AppCompatActivity
         @Override
         public void onClick(View v)
         {
+            //파이어베이스 관련 설정
+            String token = FirebaseInstanceId.getInstance().getToken();
+            FirebaseMessaging.getInstance().subscribeToTopic("news"); // 이 코드 하나만으로 news에 대해 구독이 되나보네
+            Log.d("Refreshed token:", token);
+
             defaultTextBox titleBox = (defaultTextBox) findViewById(R.id.title_box);
             defaultTextBox bodyBox = (defaultTextBox) findViewById(R.id.body_box);
 
@@ -51,7 +63,9 @@ public class QuestionActivity extends AppCompatActivity
             {
                 String title = titleBox.mEditText.getText().toString();
                 String body = bodyBox.mEditText.getText().toString();
-                // Toast.makeText(v.getContext(), "제목: "+title+"\n본문: "+body, Toast.LENGTH_LONG).show(); 질문과 본문이 제대로 담겼는지 확인하기 위한 코드
+
+                //서버 전송 전에 파라미터가 비어 있는지 체크
+                if(SafetyGate(title, body, Category)) {return;}
 
                 //파라미터 안에 내용을 담습니다.
                 RequestParams params = new RequestParams();
@@ -60,7 +74,9 @@ public class QuestionActivity extends AppCompatActivity
                 params.put("UserStudentID", userInfo.StudentID);
                 params.put("UserNickName", userInfo.NickName);
                 params.put("Category", Category);
-
+                isEmergency = true;
+                params.put("IsEmergency", isEmergency);
+                params.put("PushCategory", INUClasses.generateCodePosition(Category));
 
                 //질문을 서버로 전송
                 client.post("/new_question", params, new AsyncHttpResponseHandler() {
@@ -81,6 +97,24 @@ public class QuestionActivity extends AppCompatActivity
             }
             else {  Toast.makeText(v.getContext(), "객체가 없습니다.", Toast.LENGTH_LONG).show();}
         }
+
+        public boolean SafetyGate(String string, String string2, String category)
+        {
+            if(string.isEmpty() == true || string2.isEmpty() == true)
+            {
+                Toast.makeText(QuestionActivity.this, "제목과 본문은 비어 있으면 안되요", Toast.LENGTH_SHORT).show();
+                return true; // 야! 이거 비었어! (혹은 카테고리가 없어)
+            }
+
+            if(category.contains("카테고리"))
+            {
+                Toast.makeText(QuestionActivity.this, "카테고리를 지정해 주세요", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            return false;
+        }
+
+
     }
 
     class CategoryButtonListener implements View.OnClickListener

@@ -3,7 +3,6 @@ package comuiappcenter.facebook.m.legacy;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -12,21 +11,21 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import comuiappcenter.facebook.m.legacy.customView.AnswerList;
-import comuiappcenter.facebook.m.legacy.customView.ClassList;
-import comuiappcenter.facebook.m.legacy.customView.QuestionPreview;
+import comuiappcenter.facebook.m.legacy.customView.defaultTextBox;
 import cz.msebera.android.httpclient.Header;
 
 public class QuestionViewActivity extends AppCompatActivity
 {
-    defaultTextBox Questiontitle;
+    TextView Questiontitle;
     TextView Questionbody;
+    public static String QuestionAuthor;
+    public static String QuestionID;
     RelativeLayout AnswerButton;
     RelativeLayout middleLayout;
     ListView mAnswerList;
@@ -49,7 +48,7 @@ public class QuestionViewActivity extends AppCompatActivity
         QuestionWas = intent.getStringExtra("QuestionWas");
 
         //View를 선언합니다.
-        Questiontitle = (defaultTextBox) findViewById(R.id.title_question_view);
+        Questiontitle = (TextView) findViewById(R.id.title_question_view);
         Questionbody = (TextView) findViewById(R.id.body_question_view);
         AnswerButton = (RelativeLayout) findViewById(R.id.button_question_view);
         middleLayout = (RelativeLayout) findViewById(R.id.middle_relativelayout_question_view);
@@ -80,7 +79,8 @@ public class QuestionViewActivity extends AppCompatActivity
                         JSONObject result = response.getJSONObject(0); // 어짜피 가져오는 JSON객체는 하나임.
                         String title = result.getString("title"); // 질문 제목
                         String body = result.getString("body"); // 질문 내용
-                        Questiontitle.mEditText.setText(title);
+                        String author = result.getString("student_id");
+                        Questiontitle.setText(title);
                         Questionbody.setText(body);
                         AnswerJSONArray = result.getJSONArray("answer");//답변 내용을 가져옵니다.
 

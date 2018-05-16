@@ -1,4 +1,4 @@
-package comuiappcenter.facebook.m.legacy;
+package comuiappcenter.facebook.m.legacy.customView;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import comuiappcenter.facebook.m.legacy.R;
 
 /**
  * Created by Administrator on 2017-01-01.

@@ -1,6 +1,5 @@
 package comuiappcenter.facebook.m.legacy;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -9,17 +8,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.Random;
+
+import comuiappcenter.facebook.m.legacy.User.LoginActivity;
+import comuiappcenter.facebook.m.legacy.User.userInfo;
+import comuiappcenter.facebook.m.legacy.customView.MainRecyclerAdapter;
+import comuiappcenter.facebook.m.legacy.customView.QuestionPreview;
+import comuiappcenter.facebook.m.legacy.dataContainer.Device;
 import cz.msebera.android.httpclient.Header;
 
 //test 라는 패스로 get 요청을 해서 서버 접속 여부를 확인합니다.
@@ -69,7 +77,11 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
                     }
         });
 
-        //저장된 로그인 정보가 있는지 확인합니다. 만약 없으면 LoginActivity로 intent 됩니다.
+        //FCM 구독
+        FirebaseInstanceId.getInstance().getToken();
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+
+        //핸드폰 내에 저장된 로그인 정보가 있는지 확인합니다. 만약 없으면 LoginActivity로 intent 됩니다.
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         userInfo.StudentID = settings.getString("StudentID", null);
         userInfo.Password = settings.getString("Password", null);
@@ -85,18 +97,34 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             RequestParams params = new RequestParams();
             params.put("StudentID", userInfo.StudentID);
             params.put("Password", userInfo.Password);
-            client.post("/login", params, new TextHttpResponseHandler() // 로그인 요청 전송
+            client.post("/login", params, new TextHttpResponseHandler()
             {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable)
                 {
-                    bottomText.setText("자동 로그인 실패");
+                    Toast.makeText(SplashActivity.this, "서버 연결 실패", Toast.LENGTH_SHORT).show();
+                    //만약 등록되지 않은 사용자라면 WelcomeActivity로 인텐트(서버에서 등록된 사용자인지 아닌지 알려주게 해야겠네)
+                    Log.d("kimchi_splash", "응답 실패");
                 }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString)
                 {
-                    Toast.makeText(getApplicationContext(), responseString, Toast.LENGTH_SHORT).show();
+                    Log.d("kimchi_splash", "onSuccess 호출"+responseString);
+                    if(responseString.contains("성공"))
+                    {
+                        Toast.makeText(SplashActivity.this, "환영합니다.", Toast.LENGTH_SHORT).show();
+                        requestAccountInfo(); //계정 정보를 요청합니다.
+                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(SplashActivity.this, "아이디 혹은 패스워드를 다시 확인해 주세요", Toast.LENGTH_SHORT).show();
+                        Log.d("kimchi", responseString);
+                        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
                 }
             });
         }
@@ -104,8 +132,6 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         //저장된 사용자 정보를 불러옵니다.
         loadUserInfo(settings);
 
-        //클릭하면 intent
-        imageView.setOnClickListener(this);
     }
 
     @Override
@@ -138,12 +164,46 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             userInfo.InterestedClass.clear();
             userInfo.InterestedClass.addAll(settings.getStringSet("InterestedClass", null));
 
-            for(int i =0; i<userInfo.InterestedClass.size(); i++)
+            /*for(int i =0; i<userInfo.InterestedClass.size(); i++)
             {
                 Log.d("kimchi_retrive", userInfo.InterestedClass.get(i).toString());
-            }
+            }*/
         }
     }
 
+    public void requestAccountInfo()
+    {
+        Log.d("kimchi", "requestAccountInfo 호출됨");
+
+        RequestParams params = new RequestParams();
+        params.put("StudentID", userInfo.StudentID);
+
+        client.post("/request_account_info", params, new JsonHttpResponseHandler()
+        {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse)
+            {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.d("kimchi_splash", "서버에서 계정 정보를 불러오는데 실패했습니다.");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) //서버 통신에 성공하면 내 질문들을 불러와요.
+            {
+                for (int i = 0; i< response.length(); i++)
+                {
+                    try
+                    {
+                        JSONObject result = response.getJSONObject(i);
+                        userInfo.point = result.getInt("point"); // point 정보를 서버에서 가져옵니다.
+                        Log.d("kimchi_splash", "서버에서 가져온 point 정보 "+Integer.toString(userInfo.point)+"점");
+                    }catch(JSONException e) {e.printStackTrace();}
+                }
+                super.onSuccess(statusCode, headers, response);
+            }
+        });
+
+
+    }
 
 }

@@ -1,4 +1,4 @@
-package comuiappcenter.facebook.m.legacy;
+package comuiappcenter.facebook.m.legacy.customView;
 
 import android.app.ActionBar;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+
+import comuiappcenter.facebook.m.legacy.R;
 
 /**
  * Created by Administrator on 2017-01-01.

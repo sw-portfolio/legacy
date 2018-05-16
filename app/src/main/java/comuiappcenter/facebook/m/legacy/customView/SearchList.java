@@ -47,7 +47,6 @@ public class SearchList extends ArrayAdapter<String > implements AdapterView.OnI
         }
 
         title = (TextView) v.findViewById(R.id.textview_interested_class_list);
-        icon = (ImageView) v.findViewById(R.id.image_view_interested_class_list);
         title.setText(titles [position]);
 
         return v;

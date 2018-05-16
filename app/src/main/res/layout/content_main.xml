@@ -12,23 +12,26 @@
     tools:context="comuiappcenter.facebook.m.legacy.MainActivity"
     tools:showIn="@layout/app_bar_main"
     android:id="@+id/relativeLayout_main"
-    android:backgroundTint="@color/appbackground">
+    android:background="@color/appbackground">
 
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
         android:id="@+id/linear_layout_my_questions"
-        android:background="@drawable/board_temp_shape">
+        android:background="@color/grayYellow"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_my_questions"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
 
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
+
 
 </RelativeLayout>

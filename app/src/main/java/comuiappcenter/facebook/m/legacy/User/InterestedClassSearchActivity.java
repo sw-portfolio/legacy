@@ -1,4 +1,4 @@
-package comuiappcenter.facebook.m.legacy;
+package comuiappcenter.facebook.m.legacy.User;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +8,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import comuiappcenter.facebook.m.legacy.customView.ClassList;
+import comuiappcenter.facebook.m.legacy.dataContainer.INUClasses;
+import comuiappcenter.facebook.m.legacy.R;
 import comuiappcenter.facebook.m.legacy.customView.SearchList;
 
 public class InterestedClassSearchActivity extends AppCompatActivity

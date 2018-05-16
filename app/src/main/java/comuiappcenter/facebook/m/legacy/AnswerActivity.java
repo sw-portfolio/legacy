@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -15,12 +16,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import comuiappcenter.facebook.m.legacy.User.userInfo;
+import comuiappcenter.facebook.m.legacy.customView.defaultTextBox;
 import cz.msebera.android.httpclient.Header;
 
 public class AnswerActivity extends AppCompatActivity
 {
-    defaultTextBox Questiontitle;
-    defaultTextBox Questionbody;
+    TextView Questiontitle;
+    TextView Questionbody;
     defaultTextBox Answertitle;
     defaultTextBox Answerbody;
     ImageView AcceptButton;
@@ -34,8 +37,8 @@ public class AnswerActivity extends AppCompatActivity
         setContentView(R.layout.activity_answer);
 
         //각종 View를 선언합니다.
-        Questiontitle = (defaultTextBox) findViewById(R.id.title_answer_activity);
-        Questionbody = (defaultTextBox) findViewById(R.id.body_answer_activity);
+        Questiontitle = (TextView) findViewById(R.id.title_answer_activity);
+        Questionbody = (TextView) findViewById(R.id.body_answer_activity);
         Answertitle = (defaultTextBox) findViewById(R.id.title_answer_textview);
         Answerbody = (defaultTextBox) findViewById(R.id.answer_text_body);
         AcceptButton = (ImageView) findViewById(R.id.accept_button_answer_activity);
@@ -66,8 +69,8 @@ public class AnswerActivity extends AppCompatActivity
                         JSONObject result = response.getJSONObject(i);
                         String title = result.getString("title"); // 질문 제목
                         String body = result.getString("body"); // 질문 내용
-                        Questiontitle.mEditText.setText(title);
-                        Questionbody.mEditText.setText(body);
+                        Questiontitle.setText(title);
+                        Questionbody.setText(body);
 
                     }catch(JSONException e) {e.printStackTrace();}
                 }

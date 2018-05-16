@@ -1,7 +1,6 @@
 package comuiappcenter.facebook.m.legacy.customView;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import comuiappcenter.facebook.m.legacy.userInfo;
+import comuiappcenter.facebook.m.legacy.User.userInfo;
 
 import java.util.List;
 
@@ -54,7 +53,6 @@ public class ClassList extends ArrayAdapter<String > implements AdapterView.OnIt
             }
 
             title = (TextView) v.findViewById(R.id.textview_interested_class_list);
-            icon = (ImageView) v.findViewById(R.id.image_view_interested_class_list);
             title.setText(titles.get(position));
             setappearFromLeftAnimation(v);
             v.setOnClickListener(new View.OnClickListener()

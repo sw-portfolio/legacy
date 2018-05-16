@@ -1,35 +1,23 @@
-package comuiappcenter.facebook.m.legacy;
+package comuiappcenter.facebook.m.legacy.User;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
+import comuiappcenter.facebook.m.legacy.MainActivity;
+import comuiappcenter.facebook.m.legacy.Messaging.MessageSubscription;
+import comuiappcenter.facebook.m.legacy.dataContainer.INUClasses;
+import comuiappcenter.facebook.m.legacy.R;
 import comuiappcenter.facebook.m.legacy.customView.ClassList;
 import comuiappcenter.facebook.m.legacy.customView.ClassSearchList;
 
@@ -93,9 +81,13 @@ public class InterestedClassSettingActivity extends AppCompatActivity
     @Override
     public void onBackPressed() // back키로 사용자가 돌아가면, SharedPreference에 관심수업 내용을 저장합니다.
     {
-        super.onBackPressed();
         saveInterestedClass();
+        MessageSubscription.subscribeTopic();
         Toast.makeText(InterestedClassSettingActivity.this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+
+        //무조건 메인 엑티비티로 이동합니다.
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     public void saveInterestedClass()

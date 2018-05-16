@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "186986585880",
+    "firebase_url": "https://legacy-c2cd7.firebaseio.com",
+    "project_id": "legacy-c2cd7",
+    "storage_bucket": "legacy-c2cd7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:186986585880:android:a035ced2399b018e",
+        "android_client_info": {
+          "package_name": "comuiappcenter.facebook.m.legacy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "186986585880-8r5pj4kv0ojcsfpibr47ebsictaqvcrn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpOaKKs3neI9u5s5HIfck_expJEZH3IfM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

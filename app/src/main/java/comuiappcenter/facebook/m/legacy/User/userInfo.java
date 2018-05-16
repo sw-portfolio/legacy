@@ -1,4 +1,4 @@
-package comuiappcenter.facebook.m.legacy;
+package comuiappcenter.facebook.m.legacy.User;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,8 +13,11 @@ import android.widget.Toast;
 import com.plattysoft.leonids.ParticleSystem;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
+
+import comuiappcenter.facebook.m.legacy.R;
+import comuiappcenter.facebook.m.legacy.RestClient;
+import comuiappcenter.facebook.m.legacy.SplashActivity;
 
 /**
  * Created by Administrator on 2017-01-03.
@@ -38,10 +41,13 @@ public class userInfo extends AppCompatActivity
     public static String Year; //junior, senior, sophomore, freshman...
     public static String Major;
     public static String SecondMajor;
+    public static int point; // legacy의 포인트 제도
 
     public static ArrayList<String> InterestedClass = new ArrayList<String>(); // 나중에 이름이 같고 교수가 다른 수업을 다른 객체로 구분하게 될 수도 있기 때문에 중복을 허용하는 ArrayList로 일단 해둠.
     public static int LengthInterestedClass;
     public static boolean isOnline = false;
+    public static boolean isReceivingPushMessage;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -97,10 +103,19 @@ public class userInfo extends AppCompatActivity
             }
         }
         Random random = new Random();
-        int randInt = 1;
+        int randInt = 0;
         if(InterestedClass.size() != 0) {randInt  = random.nextInt(InterestedClass.size());}
 
         return InterestedClass.get(randInt);
     }
 
+    public static void saveUserInfo(String StudentID, String Password, String NickName, String Major)
+    {
+        userInfo.StudentID = StudentID;
+        userInfo.Password = Password;
+        userInfo.NickName = NickName;
+        userInfo.Major = Major;
+
+
+    }
 }

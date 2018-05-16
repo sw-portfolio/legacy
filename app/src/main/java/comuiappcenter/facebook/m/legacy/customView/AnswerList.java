@@ -11,11 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.plattysoft.leonids.ParticleSystem;
 
 import org.w3c.dom.Text;
 
+import comuiappcenter.facebook.m.legacy.QuestionViewActivity;
 import comuiappcenter.facebook.m.legacy.R;
+import comuiappcenter.facebook.m.legacy.RestClient;
+import comuiappcenter.facebook.m.legacy.User.userInfo;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Administrator on 2017-01-19.
@@ -32,6 +38,8 @@ public class AnswerList extends ArrayAdapter<String > implements AdapterView.OnI
     TextView body;
     TextView author;
     ImageView thumbsUp;
+    ImageView chooseImage;
+    RestClient client;
 
     public AnswerList(Context context, int resId, String[] items, String[] body, String[] author)
     {
@@ -60,6 +68,8 @@ public class AnswerList extends ArrayAdapter<String > implements AdapterView.OnI
         body = (TextView) v.findViewById(R.id.body_answer_list);
         author = (TextView) v.findViewById(R.id.author_answer_list);
         thumbsUp = (ImageView) v.findViewById(R.id.answer_list_thumbs_up_button);
+        chooseImage = (ImageView) v.findViewById(R.id.answer_list_choose);
+        chooseImage.setVisibility(View.GONE);
 
         title.setText(titles[position]);
         body.setText(bodies[position]);
@@ -74,6 +84,41 @@ public class AnswerList extends ArrayAdapter<String > implements AdapterView.OnI
                 Toast.makeText(mcontext.getApplicationContext(), "춫천", Toast.LENGTH_LONG).show();
             }
         });
+
+        //채택 버튼 구현 (내가 질문자일때만)
+        if(QuestionViewActivity.QuestionAuthor == userInfo.StudentID)
+        {
+            chooseImage.setVisibility(View.VISIBLE);
+            chooseImage.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    client = new RestClient(mcontext);
+                    RequestParams params = new RequestParams();
+                    params.put("QuestionID", QuestionViewActivity.QuestionID); // 질문 ID 와 답변 ID를 서버에 보냅니다.
+                    //params.put("AnswerID", QuestionViewActivity.);
+
+                    client.post("/choose_question", params, new TextHttpResponseHandler()
+                    {
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable)
+                        {
+                            Toast.makeText(mcontext, "채택 실패", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, String responseString)
+                        {
+                            Toast.makeText(mcontext, "채택 되었습니다", Toast.LENGTH_SHORT).show();
+                            notifyDataSetInvalidated(); // 이거 맞나?
+                        }
+                    });
+
+                }
+            });
+
+        }
 
         return v;
     }

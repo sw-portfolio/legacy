@@ -1,4 +1,4 @@
-package comuiappcenter.facebook.m.legacy;
+package comuiappcenter.facebook.m.legacy.User;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -22,10 +22,8 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -39,6 +37,9 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import comuiappcenter.facebook.m.legacy.MainActivity;
+import comuiappcenter.facebook.m.legacy.R;
+import comuiappcenter.facebook.m.legacy.RestClient;
 import cz.msebera.android.httpclient.Header;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -73,6 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     RestClient client;
+    TextView registerButton;
 
 
     @Override
@@ -94,46 +96,76 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view)
             {
-                userInfo.StudentID = mEmailView.getText().toString();
-                userInfo.Password = mPasswordView.getText().toString();
+                try
+                {
+                    userInfo.StudentID = mEmailView.getText().toString();
+                    userInfo.Password = mPasswordView.getText().toString();
 
-                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString("StudentID", userInfo.StudentID); // 아까 가져온 문자열 값을 넣습니다.
-                editor.putString("Password", userInfo.Password);
-                editor.commit(); // commit을 해야 값이 들어갑니다.
+                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("StudentID", userInfo.StudentID); // 아까 가져온 문자열 값을 넣습니다.
+                    editor.putString("Password", userInfo.Password);
+                    editor.commit(); // commit을 해야 값이 들어갑니다.
 
-                Toast.makeText(LoginActivity.this,
-                        "학번:"+userInfo.StudentID+"\n비밀번호:"+userInfo.Password+" 으로 로그인을 시도합니다.",
-                        Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,
+                            "학번:"+userInfo.StudentID+"\n비밀번호:"+userInfo.Password+" 으로 로그인을 시도합니다.",
+                            Toast.LENGTH_SHORT).show();
 
-                //서버에 요청
-                RequestParams params = new RequestParams();
-                params.put("StudentID", userInfo.StudentID);
-                params.put("Password", userInfo.Password);
-                client.post("/login", params, new TextHttpResponseHandler() {
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable)
+                    //서버에 요청
+                    RequestParams params = new RequestParams();
+                    params.put("StudentID", userInfo.StudentID);
+                    params.put("Password", userInfo.Password);
+                    client.post("/login", params, new TextHttpResponseHandler()
                     {
-                        Toast.makeText(LoginActivity.this, "서버 연결 실패", Toast.LENGTH_SHORT).show();
-                    }
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable)
+                        {
+                            Toast.makeText(LoginActivity.this, "서버 연결 실패", Toast.LENGTH_SHORT).show();
+                            //만약 등록되지 않은 사용자라면 WelcomeActivity로 인텐트(서버에서 등록된 사용자인지 아닌지 알려주게 해야겠네)
+                            Log.d("kimchi", "응답 실패");
+                        }
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String responseString)
-                    {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, String responseString)
+                        {
+                            Log.d("kimchi", "onSuccess 호출");
+                            if(responseString.compareTo("성공") == 0 )
+                            {
+                                Toast.makeText(LoginActivity.this, "환영합니다.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+                            else {
+                                Toast.makeText(LoginActivity.this, "아이디 혹은 패스워드를 다시 확인해 주세요", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        //회원가입 버튼을 구현합니다.
+        registerButton = (TextView) findViewById(R.id.register_button);
+        registerButton.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
-    private void populateAutoComplete() {
+    private void populateAutoComplete()
+    {
         if (!mayRequestContacts()) {
             return;
         }
